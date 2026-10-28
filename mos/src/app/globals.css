@@ -1,0 +1,218 @@
+@import "tailwindcss";
+@import "./studio.css";
+
+/* ───────────────────────────────────────────────
+   MOTOR SOVEREIGNTY — design tokens
+   ─────────────────────────────────────────────── */
+
+:root {
+  /* The landing page uses Tailwind's slate-900 for borders and text; keep it on the brand ink. */
+  --color-slate-900: #2A0E3A;
+
+  /* ── Brand ── */
+  --ink:                 #2A0E3A;   /* borders, hard shadows, strong text */
+  --ms-accent:         #00897B;
+  --ms-success:        #1FB57A;
+  --ms-danger:         #E63946;
+  --ms-border:         #E7B6C9;
+  --ms-border-active:  #2A0E3A;
+  --shadow-sm:           0 1px 2px rgba(42, 14, 58, 0.12);
+  --font-geist-mono:     ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* ── Surfaces ── */
+  --ms-bg:             #FFE3EC;
+  --ms-surface:        #ffffff;
+  --ms-surface-raised: #FFF3F7;
+  --ms-surface-hover:  #FFD3E1;
+
+  /* ── Text ── */
+  --ms-text:           #2A0E3A;
+  --ms-text-secondary: #6B4A7A;
+  --ms-text-muted:     #A98BB8;
+
+  /* ── Category Colors (Exact from Screenshot) ── */
+  --cat-physical:       #FFC93C;
+  --cat-social:          #19B5C9;
+  --cat-pain:            #FF3D81;
+  --cat-yes:             #FFD23F;
+  --cat-no:              #E63946;
+  --cat-hungry:          #FF8A3D;
+  --cat-thirsty:         #2D7DFF;
+  --cat-toilet:          #3DBE6B; 
+  --cat-entertainment:   #A25CFF; 
+  --cat-music:           #FF5CC8;
+  --cat-sleep:           #5B6CFF;
+  --cat-reoptimize:      #1FB57A;
+  --cat-environment:     #7B5CFF;
+
+  /* ── Tone & Action Colors ── */
+  --btn-navy:            #4A1D6B;
+  --btn-purple:          #00897B;
+  --btn-grey:            #8E6FA3;
+  --btn-red:             #E63946;
+
+  /* ── Prediction Colors ── */
+  --pred-speech:         #FFC857;
+  --pred-error:          #22D3B5;
+  --pred-retry:          #FF6B9D;
+
+  /* ── Radii ── */
+  --radius-sm:  8px;
+  --radius-md:  12px;
+  --radius-lg:  20px;
+  --radius-xl:  28px;
+
+  /* ── Shadows ── */
+  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-elevated: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-glow-accent: 0 0 20px rgba(59, 130, 246, 0.4);
+  --shadow-glow-danger: 0 0 20px rgba(239, 68, 68, 0.4);
+}
+
+@theme inline {
+  --color-background: var(--ms-bg);
+  --color-foreground: var(--ms-text);
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-geist-mono);
+}
+
+/* ── Base ── */
+html {
+  color-scheme: light;
+}
+
+body {
+  background: var(--ms-bg);
+  color: var(--ms-text);
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ───────────────────────────────────────────────
+   KEYFRAME ANIMATIONS
+   ─────────────────────────────────────────────── */
+
+@keyframes ms-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.6; }
+}
+
+@keyframes ms-glow-breathe {
+  0%, 100% { box-shadow: 0 0 12px hsla(175, 70%, 50%, 0.3); }
+  50%      { box-shadow: 0 0 28px hsla(175, 70%, 50%, 0.55); }
+}
+
+@keyframes ms-cursor-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
+  50%      { transform: translate(-50%, -50%) scale(1.3); opacity: 0.3; }
+}
+
+@keyframes iris-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes iris-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes iris-scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes dash {
+  0%   { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: 251.2; }
+}
+
+/* ───────────────────────────────────────────────
+   UTILITY CLASSES
+   ─────────────────────────────────────────────── */
+
+/* Glass surface */
+.iris-glass {
+  background: hsla(220, 16%, 14%, 0.7);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  border: 1px solid var(--ms-border);
+}
+
+.iris-glass-strong {
+  background: hsla(220, 16%, 14%, 0.85);
+  backdrop-filter: blur(24px) saturate(1.3);
+  -webkit-backdrop-filter: blur(24px) saturate(1.3);
+  border: 1px solid var(--ms-border);
+}
+
+/* Shimmer skeleton */
+.iris-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--ms-surface) 25%,
+    var(--ms-surface-raised) 50%,
+    var(--ms-surface) 75%
+  );
+  background-size: 200% 100%;
+  animation: iris-shimmer 1.8s ease-in-out infinite;
+}
+
+/* Gaze tile — the core interactive element */
+.gaze-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  background: var(--ms-surface);
+  border: 1px solid var(--ms-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+
+  transition: all 0.2s ease-out;
+  cursor: default;
+  user-select: none;
+}
+
+.gaze-tile:hover {
+  background: var(--ms-surface-hover);
+}
+
+/* Magnetic lock state */
+.gaze-tile[data-locked="true"] {
+  border-color: var(--ms-border-active);
+  box-shadow: var(--shadow-glow-accent);
+  background: var(--ms-surface-raised);
+  animation: ms-glow-breathe 1.6s ease-in-out infinite;
+}
+
+/* Disabled state */
+.gaze-tile[data-disabled="true"] {
+  opacity: 0.4;
+  filter: grayscale(0.5);
+  pointer-events: none;
+}
+
+@keyframes agent-ripple {
+  from { transform: scale(0.4); opacity: 0.9; }
+  to { transform: scale(2.2); opacity: 0; }
+}
+
+@keyframes dwell-pop {
+  from { transform: scale(0.6) translateY(8px); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+@keyframes dwell-spark {
+  from { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
+  to { transform: translate(var(--dx), var(--dy)) scale(0.2) rotate(200deg); opacity: 0; }
+}
+
+@keyframes calPulse {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.12); opacity: 1; }
+}

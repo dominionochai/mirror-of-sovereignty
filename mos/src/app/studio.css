@@ -1,0 +1,237 @@
+/* Motor Sovereignty studio. Plain CSS so the interface does not depend on utility classes. */
+
+.ms-root {
+  --scale: 1;
+  position: fixed;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  color: var(--ink);
+  user-select: none;
+}
+
+.ms-topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.ms-brand { font-size: 18px; font-weight: 900; letter-spacing: 0.12em; }
+.ms-brand small { display: block; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: var(--ms-text-secondary); }
+.ms-chips { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
+.ms-chip {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 3px 10px;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: var(--ms-surface);
+  white-space: nowrap;
+}
+.ms-chip[data-tone="alert"] { background: var(--ink); color: #fff; }
+.ms-chip[data-tone="ok"] { background: var(--ms-success); color: #fff; border-color: var(--ink); }
+
+.ms-grid { display: grid; gap: 12px; }
+.ms-main { display: flex; flex: 1; min-height: 0; gap: 12px; }
+.ms-options {
+  --rows: var(--n, 1);
+  display: grid;
+  grid-template-columns: 1fr;
+  align-content: start;
+  width: 36%;
+  min-width: 190px;
+  overflow: hidden;
+  container-type: size;
+}
+.ms-options-inner {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 1), minmax(0, 1fr));
+  align-content: start;
+  gap: 12px;
+  height: 100%;
+}
+.ms-options .ms-tile {
+  flex: none;
+  min-height: 0;
+  height: clamp(calc(36px * var(--scale)), calc((100cqh - 8px - 12px * (var(--rows, 1) - 1)) / var(--rows, 1)), calc(96px * var(--scale)));
+  text-align: center;
+  line-height: 1.1;
+}
+.ms-controls { display: flex; align-items: stretch; gap: 12px; }
+
+/* ── Gaze targets ─────────────────────────────── */
+.ms-tile {
+  position: relative;
+  overflow: hidden;
+  flex: 1;
+  min-height: calc(64px * var(--scale));
+  padding: 0 calc(16px * var(--scale));
+  border: 3px solid var(--ink);
+  border-radius: 20px;
+  background: var(--ms-surface);
+  box-shadow: 0 6px 0 var(--ink);
+  color: var(--ink);
+  font: inherit;
+  font-size: calc(16px * min(var(--scale), 1.3));
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: default;
+  transition: transform 0.1s, box-shadow 0.1s, background 0.15s;
+}
+.ms-tile::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--p, 0) * 100%);
+  background: var(--ms-success);
+  opacity: 0.6;
+}
+.ms-tile > * { position: relative; }
+.ms-tile[data-focused="true"] { transform: translateY(4px); box-shadow: 0 2px 0 var(--ink); }
+.ms-tile[aria-pressed="true"] { background: var(--ink); color: #fff; }
+.ms-tile:disabled { opacity: 0.4; box-shadow: 0 6px 0 rgba(42, 14, 58, 0.35); }
+.ms-tile--sm { min-height: calc(52px * var(--scale)); }
+.ms-swatch { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--ink); background: var(--c); flex: none; box-shadow: 0 0 0 2px #fff; }
+
+/* ── Stage ────────────────────────────────────── */
+.ms-stage {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  border: 3px solid var(--ink);
+  border-radius: 24px;
+  background: var(--ms-surface-raised);
+  box-shadow: 0 6px 0 var(--ink);
+}
+.ms-stage video,
+.ms-stage img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+.ms-stage .ms-pane img { transform: scaleX(-1); }
+.ms-pane { position: relative; overflow: hidden; border: none; padding: 0; background: transparent; transition: flex 0.3s ease; cursor: default; }
+.ms-pane + .ms-pane { border-left: 3px solid var(--ink); }
+.ms-pane[data-focused="true"] { outline: 6px solid var(--ms-success); outline-offset: -6px; }
+.ms-label {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 4px 12px;
+  border-radius: 10px;
+  background: var(--ink);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+.ms-label[data-tone="warn"] { background: var(--ms-danger); }
+.ms-label--right { left: auto; right: 12px; }
+.ms-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  padding: 8px 18px;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+.ms-error {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: var(--ms-danger);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* ── Intensity ────────────────────────────────── */
+.ms-meter {
+  flex: 1.4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0 12px;
+  min-height: calc(64px * var(--scale));
+  border: 3px solid var(--ink);
+  border-radius: 20px;
+  background: var(--ms-surface);
+  text-align: center;
+}
+.ms-meter-title { font-size: 11px; font-weight: 800; letter-spacing: 0.1em; color: var(--ms-text-secondary); }
+.ms-meter-bar { width: 100%; height: 12px; border-radius: 999px; background: var(--ms-surface-hover); overflow: hidden; border: 2px solid var(--ink); }
+.ms-meter-bar > div { height: 100%; background: var(--ms-accent); transition: width 0.2s; }
+.ms-meter-value { font-size: 14px; font-weight: 900; }
+
+.ms-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; font-family: var(--font-geist-mono), ui-monospace, monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; color: var(--ms-text-secondary); }
+
+/* ── Full-screen stages ───────────────────────── */
+.ms-screen { position: fixed; inset: 0; background: var(--ms-bg); cursor: none; }
+.ms-center { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); text-align: center; pointer-events: none; }
+.ms-kicker { font-family: var(--font-geist-mono), ui-monospace, monospace; font-size: 12px; font-weight: 700; letter-spacing: 0.14em; color: var(--ms-text-muted); }
+.ms-headline { margin-top: 8px; font-size: 24px; font-weight: 800; color: var(--ms-text); }
+.ms-target { position: absolute; transform: translate(-50%, -50%); }
+.ms-dot { width: 36px; height: 36px; border-radius: 50%; background: var(--ink); box-shadow: 0 0 0 10px rgba(42, 14, 58, 0.12), 0 0 40px 10px rgba(255, 255, 255, 0.7); animation: calPulse 1.2s ease-in-out infinite; }
+.ms-loading { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 24px; text-align: center; }
+.ms-loading h1 { font-size: 34px; font-weight: 900; letter-spacing: 0.04em; }
+.ms-loading p { max-width: 440px; font-size: 18px; font-weight: 600; }
+.ms-button { padding: 12px 24px; border: 3px solid var(--ink); border-radius: 16px; background: var(--ms-surface); box-shadow: 0 6px 0 var(--ink); font: inherit; font-weight: 800; color: var(--ink); cursor: pointer; }
+.ms-button:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--ink); }
+
+.ms-progress { position: absolute; left: 50%; top: calc(18% + 90px); width: min(420px, 60vw); height: 10px; transform: translateX(-50%); border: 2px solid var(--ink); border-radius: 999px; overflow: hidden; background: rgba(255, 255, 255, 0.7); }
+.ms-progress > div { height: 100%; width: 100%; transform-origin: left; background: var(--ink); animation: msFill 5s linear forwards; }
+@keyframes msFill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+/* ── X-ray view ───────────────────────────────── */
+.ms-xray { --scale: 1.2; position: fixed; inset: 0; z-index: 850; display: flex; flex-direction: column; background: var(--ms-bg); color: var(--ink); }
+.ms-xray-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 20px; background: #fff; border-bottom: 4px solid var(--ink); box-shadow: 0 4px 0 var(--ink); }
+.ms-xray-body { position: relative; display: flex; flex: 1; min-height: 0; align-items: center; justify-content: center; padding: 16px; }
+.ms-xray-body canvas { width: min(100%, calc((100vh - 150px) * 4 / 3)); height: auto; aspect-ratio: 4 / 3; border: 4px solid var(--ink); border-radius: 16px; background: #000; object-fit: contain; box-shadow: 8px 8px 0 var(--ink); }
+.ms-xray-wait { position: absolute; color: #fff; font-weight: 800; font-size: 14px; }
+
+/* ── Start page ── */
+.ms-start { min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; background: var(--ms-bg); color: var(--ms-text); }
+.ms-start-card { width: min(640px, 100%); background: var(--ms-surface); border: 3px solid var(--ink); border-radius: 20px; box-shadow: 6px 6px 0 var(--ink); padding: 28px; }
+.ms-eyebrow { font-size: 12px; font-weight: 800; letter-spacing: 0.18em; color: var(--ms-text-secondary); margin: 0 0 8px; }
+.ms-start h1 { font-size: clamp(26px, 5vw, 36px); line-height: 1.1; margin: 0 0 10px; font-weight: 800; }
+.ms-lead { margin: 0 0 20px; color: var(--ms-text-secondary); line-height: 1.5; }
+.ms-keys { display: grid; gap: 16px; }
+.ms-field label { display: flex; justify-content: space-between; gap: 8px; font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+.ms-field label span { font-weight: 600; font-size: 12px; color: var(--ms-text-muted); }
+.ms-input-row { display: flex; gap: 8px; }
+.ms-input-row input { flex: 1; min-width: 0; font: inherit; font-family: var(--font-geist-mono); font-size: 14px; padding: 12px 14px; border: 2px solid var(--ink); border-radius: 12px; background: var(--ms-surface-raised); color: var(--ms-text); }
+.ms-input-row input:focus-visible, .ms-start button:focus-visible, .ms-primary:focus-visible, .ms-modes input:focus-visible { outline: 3px solid var(--ms-accent); outline-offset: 2px; }
+.ms-input-row input[aria-invalid="true"] { border-color: var(--ms-danger); }
+.ms-help { margin: 6px 0 0; font-size: 12.5px; color: var(--ms-text-secondary); }
+.ms-help[data-tone="ok"] { color: #0f7a52; font-weight: 700; }
+.ms-help[data-tone="bad"] { color: #b3202c; font-weight: 700; }
+.ms-ghost { font: inherit; font-weight: 700; font-size: 14px; padding: 10px 14px; border: 2px solid var(--ink); border-radius: 12px; background: var(--ms-surface); color: var(--ms-text); cursor: pointer; }
+.ms-ghost:hover:not(:disabled) { background: var(--ms-surface-hover); }
+.ms-ghost:disabled, .ms-primary-alt:disabled { opacity: 0.5; cursor: not-allowed; }
+.ms-modes { border: 2px solid var(--ink); border-radius: 14px; padding: 10px 12px 12px; display: grid; gap: 8px; margin: 0; }
+.ms-modes legend { font-weight: 700; font-size: 14px; padding: 0 6px; }
+.ms-modes label { display: grid; grid-template-columns: auto 1fr; column-gap: 10px; align-items: start; padding: 10px; border-radius: 10px; cursor: pointer; border: 2px solid transparent; }
+.ms-modes label[data-active="true"] { background: var(--ms-surface-raised); border-color: var(--ms-accent); }
+.ms-modes small { grid-column: 2; color: var(--ms-text-secondary); font-size: 12.5px; }
+.ms-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.ms-primary-alt { font: inherit; font-weight: 800; font-size: 14px; padding: 10px 20px; border: 2px solid var(--ink); border-radius: 12px; background: var(--ms-accent); color: #fff; cursor: pointer; }
+.ms-status { min-height: 1.3em; margin: 0; font-size: 13px; color: var(--ms-text-secondary); }
+.ms-primary { display: block; margin-top: 18px; text-align: center; font-weight: 800; font-size: 18px; padding: 16px; border: 3px solid var(--ink); border-radius: 14px; background: var(--cat-physical); color: var(--ink); text-decoration: none; box-shadow: 4px 4px 0 var(--ink); }
+.ms-primary:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--ink); }
+.ms-fine { margin: 14px 0 0; font-size: 12px; color: var(--ms-text-muted); line-height: 1.45; }
+.ms-start *, .ms-start-card { box-sizing: border-box; }
+.ms-start-card { min-width: 0; margin-right: 6px; }
+.ms-modes { min-width: 0; }
+.ms-start-card { padding: clamp(18px, 5vw, 28px); }
